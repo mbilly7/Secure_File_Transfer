@@ -72,8 +72,18 @@ def secureDropShell():
                     else:
                         file_path_valid = True
 
+<<<<<<< HEAD
                 except FileNotFoundError:
                     print("The provided file path does not exist.")
+=======
+            # Check if email is contacts
+            if os.path.getsize("contacts.bin") > 0:
+                if not isInContacts(email):
+                    print("provided email address is not in your contacts list")
+                else:
+                    email_valid = True
+                    print("email correct")  # debug
+>>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
 
                 if email_valid and file_path_valid:
                     shell_send(email, file_path)
@@ -426,12 +436,17 @@ def getNameFromEmail(email):
                 return x[y]["name"]
     return "MR. BEAN"
 
+<<<<<<< HEAD
 def getNameFromCredentials():
     with open("credentials.txt") as json_file:
         data = json.load(json_file)
         for user in data["users"]:
             name = user["name"]
     return name
+=======
+    print(objs)
+    dbfile.close()
+>>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
 
 def getEmailFromCredentials():
     with open("credentials.txt") as json_file:
@@ -648,6 +663,7 @@ def send_file(filename, receiver_ip_addr):
 
     SEPARATOR = "<SEPARATOR>"
 
+<<<<<<< HEAD
     # the name of file we want to send, make sure it exists
     filesize = os.path.getsize(filename)
 
@@ -663,15 +679,83 @@ def send_file(filename, receiver_ip_addr):
         # Send it to the port via tcp_client
 
         tcp_client(6001, data.encode(), receiver_ip_addr)
+=======
+    # * receiver IP Address and Port
+    host = HOST_IP
+    port = 5001
+
+    # the name of file we want to send, make sure it exists
+    filename = file_path
+    filesize = os.path.getsize(filename)
+
+    # create the client socket
+    s = socket.socket()
+
+    print(f"[+] Connecting to {host}:{port}")
+    s.connect((host, port))
+    print("[+] Connected.")
+
+    # send the filename and filesize
+    s.send(f"{filename}{SEPARATOR}{filesize}".encode())
+
+    # * start sending the file
+    progress = tqdm.tqdm(range(
+        filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
+    with open(filename, "rb") as f:
+        for _ in progress:
+            # read the bytes from the file
+            bytes_read = f.read(BUFFER_SIZE)
+            if not bytes_read:
+                # file transmitting is done
+                break
+            # we use sendall to assure transimission in
+            # busy networks
+            s.sendall(bytes_read)
+            # update the progress bar
+            progress.update(len(bytes_read))
+
+    # ! WARNING: PROBABLY NEED TO CLOSE THIS
+    # s.close()
+>>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
 
 
 #######################################
 #            Receive File             #
 #######################################
+<<<<<<< HEAD
 def receive_file(message):
     SEPARATOR = "<SEPARATOR>"
 
     filename, filesize, contents = message.decode().split(SEPARATOR)
+=======
+def receive_file():
+    # device's IP address
+    SERVER_HOST = HOST_IP
+    SERVER_PORT = 5001
+    BUFFER_SIZE = 4096  # receive 4096 bytes each time
+    SEPARATOR = "<SEPARATOR>"
+
+    # create the server socket
+    s = socket.socket()
+
+    # bind the socket to our local address
+    s.bind((SERVER_HOST, SERVER_PORT))
+
+    # enabling our server to accept connections
+    s.listen(5)
+    print(f"[*] Listening as {SERVER_HOST}:{SERVER_PORT}")
+
+    # accept connection if there is any
+    client_socket, address = s.accept()
+    # if below code is executed, that means the sender is connected
+    print(f"[+] {address} is connected.")
+
+    # receive the file infos
+    # receive using client socket, not server socket
+    received = client_socket.recv(BUFFER_SIZE).decode()
+    filename, filesize = received.split(SEPARATOR)
+    # remove absolute path if there is
+>>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
     filename = os.path.basename(filename)
 
     # Filesize is not actually used. TODO: Remove.
@@ -680,8 +764,26 @@ def receive_file(message):
 
     # TODO: Test sending/receiving files greater than 4096 bytes large.
     with open(filename, "wb") as f:
+<<<<<<< HEAD
         f.write(contents.encode())
         print("File '" + filename + "' was successfully received.")
+=======
+        for _ in progress:
+            # read 1024 bytes from the socket (receive)
+            bytes_read = client_socket.recv(BUFFER_SIZE)
+            if not bytes_read:
+                # nothing is received
+                # file transmitting is done
+                break
+            # write to the file the bytes we just received
+            f.write(bytes_read)
+            # update the progress bar
+            progress.update(len(bytes_read))
+
+    # ! WARNING: PROBABLY NEED TO CLOSE THIS
+    # client_socket.close()
+    # s.close()
+>>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
 
 #######################################
 #               Driver                #
@@ -775,6 +877,7 @@ def main():
     # prompt log in
     if query_binary("Do you want to log in"):
         if logIn():
+<<<<<<< HEAD
             # Start two threads - comm_manager & secureDropShell
             # 1. Start comm_manager
             th_comm_manager = Thread(target=communication_manager, daemon=True)
@@ -791,6 +894,15 @@ def main():
             # 2. Shell - Supports add, list, send, exit, help
             #th_secureDropShell = Thread(target=secureDropShell)
             # th_secureDropShell.start()
+=======
+            # * Start two threads - receive_files & secureDropShell
+
+            # 1. Receive files
+            th_receive_file = Thread(target=receive_file, daemon=True)
+            th_receive_file.start()
+
+            # 2. Shell - Supports add, list, send, exit, help
+>>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
             th_secureDropShell = Thread(target=secureDropShell)
             th_secureDropShell.start()
 
