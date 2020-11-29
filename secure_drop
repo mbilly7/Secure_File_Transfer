@@ -22,6 +22,7 @@ from os import chmod
 
 own_ip = None
 SYMM_KEY = "stub"
+<<<<<<< HEAD
 
 # TODO:
 # - Adding
@@ -30,6 +31,10 @@ SYMM_KEY = "stub"
 # - Sending
 # - Certificates signed by CA
 
+=======
+HOST_IP = "127.0.0.1"
+MSG = "temp"
+>>>>>>> dd7f64f (work in progress: capture messages)
 
 # # # # # 1. SHELL COMMANDS # # # # #
 
@@ -146,6 +151,15 @@ def shell_list():
 
 
 def shell_send(email, file_path):
+<<<<<<< HEAD
+=======
+    print("  Sending!")
+    if len(sys.argv) > 1:
+        communication_manager()
+    else:
+        communication_manager(True)
+#    send_file(file_path)
+>>>>>>> dd7f64f (work in progress: capture messages)
 
     global own_ip
     
@@ -560,6 +574,7 @@ def init_ip():
 
 class tcp_handler(BaseRequestHandler):
     def handle(self):
+<<<<<<< HEAD
        self.data = self.request.recv(1024).strip()
        receive_file(self.data)
        print("Echoing message: {}", self.data)#temp
@@ -571,6 +586,18 @@ class tcp_handler(BaseRequestHandler):
            
        #print("")
        self.request.sendall("ACK from server".encode())
+=======
+        global MSG
+        self.data = self.request.recv(1024).strip()
+        print("NOW PRINTING SELF.DATA")
+        print(self.data)
+        print("NOW PRINTING SELF.DATA DECODED")
+        print(self.data.decode("utf-8"))
+        MSG = self.data.decode("utf-8")
+        print("Echoing message from: {}".format(self.client_address[0]))
+        #print(self.data)
+        self.request.sendall("ACK from server".encode())
+>>>>>>> dd7f64f (work in progress: capture messages)
 
 
 def tcp_listener(port):
@@ -610,6 +637,7 @@ def tcp_client(port, data, target_ip):
 #######################################
 #          Broadcast Example          #
 #######################################
+<<<<<<< HEAD
 
 def broadcast_listener(socket, q):
     try:
@@ -635,6 +663,16 @@ def broadcast_listener(socket, q):
                 else:
                     print("todo: they declined")
 
+=======
+def broadcast_listener(socket):
+    global MSG
+    try:
+        while True:
+            data = socket.recvfrom(512)
+            print(data)
+            print("THIS WAS THE MOST RECENTLY SENT MESSAGE")
+            print(MSG)
+>>>>>>> dd7f64f (work in progress: capture messages)
     except KeyboardInterrupt:
         pass
 
@@ -898,13 +936,19 @@ def main():
             # * Start two threads - receive_files & secureDropShell
 
             # 1. Receive files
-            th_receive_file = Thread(target=receive_file, daemon=True)
-            th_receive_file.start()
+#            th_receive_file = Thread(target=receive_file, daemon=True)
+#            th_receive_file.start()
 
             # 2. Shell - Supports add, list, send, exit, help
+<<<<<<< HEAD
 >>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
             th_secureDropShell = Thread(target=secureDropShell)
             th_secureDropShell.start()
+=======
+ #           th_secureDropShell = Thread(target=secureDropShell)
+ #           th_secureDropShell.start()
+            secureDropShell()
+>>>>>>> dd7f64f (work in progress: capture messages)
 
 
 if __name__ == "__main__":
