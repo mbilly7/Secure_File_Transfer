@@ -300,7 +300,11 @@ def getPassword():
 
 
 def getHashedPassword(password):
+<<<<<<< HEAD
     # TODO: CHANGE TO 16 IN FINAL PRODUCT
+=======
+    # CHANGE TO 16 IN FINAL PRODUCT
+>>>>>>> bd75a18 (Found out the problem. We need to store data captured in a seperate file (maybe a temp file))
     return bcrypt.hashpw(password.encode("utf8"), bcrypt.gensalt(12))
 
 
@@ -440,6 +444,15 @@ def isInContacts(data):
                 exists = True
     return exists
 
+<<<<<<< HEAD
+=======
+
+def getObjs(filename):
+    global SYMM_KEY
+    aesDecryptFile("contacts.bin", SYMM_KEY)
+
+    objs = []
+>>>>>>> bd75a18 (Found out the problem. We need to store data captured in a seperate file (maybe a temp file))
 
 #{'bob': {'name': 'bob', 'email': 'bob@gmail.com'}}
 def getNameFromEmail(email):
@@ -589,13 +602,19 @@ class tcp_handler(BaseRequestHandler):
 =======
         global MSG
         self.data = self.request.recv(1024).strip()
-        print("NOW PRINTING SELF.DATA")
-        print(self.data)
+
         print("NOW PRINTING SELF.DATA DECODED")
-        print(self.data.decode("utf-8"))
-        MSG = self.data.decode("utf-8")
+        message = self.data.decode("utf-8")
+
+        print("Before setting MSG")
+        print(MSG)
+
+        print("After setting MSG")
+        MSG = message
+        print(MSG)
+
         print("Echoing message from: {}".format(self.client_address[0]))
-        #print(self.data)
+        # print(self.data)
         self.request.sendall("ACK from server".encode())
 >>>>>>> dd7f64f (work in progress: capture messages)
 
@@ -936,10 +955,11 @@ def main():
             # * Start two threads - receive_files & secureDropShell
 
             # 1. Receive files
-#            th_receive_file = Thread(target=receive_file, daemon=True)
-#            th_receive_file.start()
+            #            th_receive_file = Thread(target=receive_file, daemon=True)
+            #            th_receive_file.start()
 
             # 2. Shell - Supports add, list, send, exit, help
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
             th_secureDropShell = Thread(target=secureDropShell)
@@ -947,6 +967,10 @@ def main():
 =======
  #           th_secureDropShell = Thread(target=secureDropShell)
  #           th_secureDropShell.start()
+=======
+         #           th_secureDropShell = Thread(target=secureDropShell)
+         #           th_secureDropShell.start()
+>>>>>>> bd75a18 (Found out the problem. We need to store data captured in a seperate file (maybe a temp file))
             secureDropShell()
 >>>>>>> dd7f64f (work in progress: capture messages)
 
