@@ -474,15 +474,20 @@ def isInContacts(data):
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
+=======
+
+>>>>>>> d29135a (Update)
 def getEmailFromCredentials():
     with open("credentials.txt") as json_file:
-            data = json.load(json_file)
-            for user in data["users"]:
-                email = user["email"]
+        data = json.load(json_file)
+        for user in data["users"]:
+            email = user["email"]
     return email
 >>>>>>> d1e287e (Fix listing port issue)
+
 
 def getObjs(filename):
     global SYMM_KEY
@@ -699,7 +704,7 @@ def tcp_client(port, data, target_ip):
         else:
             print("No contacts online.")
     finally:
-        #s.close() COMMENTED OUT FOR EXPERIMENTATION FOR TCP_HANDLER
+        # s.close() COMMENTED OUT FOR EXPERIMENTATION FOR TCP_HANDLER
         return s
     '''
     print("Bytes Sent:     {}".format(data))
@@ -710,6 +715,7 @@ def tcp_client(port, data, target_ip):
 #######################################
 #          Broadcast Example          #
 #######################################
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 def broadcast_listener(socket, q):
@@ -737,6 +743,10 @@ def broadcast_listener(socket, q):
                     print("todo: they declined")
 
 =======
+=======
+
+
+>>>>>>> d29135a (Update)
 def broadcast_listener(socket):
     global MSG
     try:
@@ -915,7 +925,8 @@ def receive_file():
 #               Driver                #
 #######################################
 
-def establishConnection(switch_ports = False):
+
+def establishConnection(switch_ports=False):
     # find own ip
     init_ip()
     tcp_listen = 9990 if switch_ports else 9995
@@ -931,12 +942,15 @@ def establishConnection(switch_ports = False):
 
     return tcp_port, tcp_listener_worker
 
+
 def sendEmail(tcp_port):
     tcp_client(tcp_port, getEmailFromCredentials())
+
 
 def sendEmailRequest(tcp_port):
     tcp_client(tcp_port, "Requesting Email.")
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 def sendEmail(tcp_port):
     tcp_client(tcp_port, getEmailFromCredentials())
@@ -946,12 +960,16 @@ def killProcesses(procs):
     for p in procs:
         print("Terminating: {}".format(p.name))
 =======
+=======
+
+>>>>>>> d29135a (Update)
 def killProcesses(p):
     if p.is_alive():
         p.terminate()
         print("Process terminated.")
     if not p.is_alive():
         p.join()
+
 
 def contacts_communication_manager(switch_ports=False):
     # find own ip
@@ -979,8 +997,8 @@ def contacts_communication_manager(switch_ports=False):
                                   args=(tcp_listen,))
 
     procs = [
-        #broadcast_listener_worker,
-        #broadcast_sender_worker,
+        # broadcast_listener_worker,
+        # broadcast_sender_worker,
         tcp_listener_worker,
     ]
 
@@ -999,9 +1017,13 @@ def contacts_communication_manager(switch_ports=False):
             p.join()
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 def communication_manager():
 =======
+=======
+
+>>>>>>> d29135a (Update)
 '''
 def communication_manager(switch_ports=False):
 >>>>>>> d1e287e (Fix listing port issue)
