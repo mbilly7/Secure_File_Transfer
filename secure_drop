@@ -11,7 +11,10 @@ import re
 import sys
 import ssl
 import socket
+<<<<<<< HEAD
 import time
+=======
+>>>>>>> abf0bd6 (remove progress bar from receive_file(), there is a connection error in line 617)
 from time import sleep
 from multiprocessing import Process, Queue
 from socketserver import BaseRequestHandler, TCPServer
@@ -809,7 +812,12 @@ def send_file(filename, receiver_ip_addr):
 =======
     # * receiver IP Address and Port
     host = HOST_IP
-    port = 5002
+    print("IMPORTANT!")
+    print(len(sys.argv))
+    if len(sys.argv) > 1:
+        port = 5001
+    else:
+        port = 5002
 
     # the name of file we want to send, make sure it exists
     filename = file_path
@@ -829,6 +837,11 @@ def send_file(filename, receiver_ip_addr):
     with open(filename, "rb") as f:
         # read the bytes from the file
         bytes_read = f.read(BUFFER_SIZE)
+
+#        if not bytes_read:
+            #file transmitting is done
+#            break
+        
         # send file
         s.sendall(bytes_read)
         print("File '" + filename + "' was successfully sent.")
@@ -889,6 +902,7 @@ def receive_file():
     # TODO: Test sending/receiving files greater than 4096 bytes large.
 =======
     # start receiving the file from the socket and writing to the file stream
+<<<<<<< HEAD
     progress = tqdm.tqdm(range(
         filesize), "...", unit="B", unit_scale=True, unit_divisor=1024)
 >>>>>>> 2247660 (Remove tqdm progress bar for sending.)
@@ -900,15 +914,22 @@ def receive_file():
         for _ in progress:
             # read 1024 bytes from the socket (receive)
             bytes_read = client_socket.recv(BUFFER_SIZE)
+=======
+    # read 1024 bytes from the socket (receive)
+>>>>>>> abf0bd6 (remove progress bar from receive_file(), there is a connection error in line 617)
 
-            if not bytes_read:
-                # file transmitting is done
-                break
+    # NOTE: test sending/receiving files greater than 4096 bytes large to see
+    # if it works
+    with open(filename, "wb") as f:
+        bytes_read = client_socket.recv(BUFFER_SIZE)
 
-            # write to the file the bytes we just received
-            f.write(bytes_read)
-            progress.update(len(bytes_read))
+#        if not bytes_read:
+            # file transmitting is done
+#            break
 
+        # write to the file the bytes we just received
+        f.write(bytes_read)
+    
         print("File '" + filename + "' was successfully received.")
 
     # ! WARNING: PROBABLY NEED TO CLOSE THIS
