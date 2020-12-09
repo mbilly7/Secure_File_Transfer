@@ -26,6 +26,7 @@ from os import chmod
 own_ip = None
 SYMM_KEY = "stub"
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 # TODO:
 # - Adding
@@ -36,6 +37,11 @@ SYMM_KEY = "stub"
 
 =======
 HOST_IP = "127.0.0.1"
+=======
+#HOST_IP_1 = "127.0.0.2"
+HOST_IP_2 = "172.17.0.3"
+HOST_IP_3 = "172.17.0.4"
+>>>>>>> d314fce (port and host tinkering)
 MSG = "temp"
 >>>>>>> dd7f64f (work in progress: capture messages)
 
@@ -854,8 +860,8 @@ def send_file(filename, receiver_ip_addr):
         tcp_client(6001, data.encode(), receiver_ip_addr)
 =======
     # * receiver IP Address and Port
-    host = HOST_IP
-    port = 5001
+    host = HOST_IP_3 # hardcoded for now, get from message instead
+    port = 5013
 
     # the name of file we want to send, make sure it exists
     filename = file_path
@@ -904,8 +910,8 @@ def receive_file(message):
 =======
 def receive_file():
     # device's IP address
-    SERVER_HOST = HOST_IP
-    SERVER_PORT = 5001
+    SERVER_HOST = HOST_IP_2
+    SERVER_PORT = 5013
     BUFFER_SIZE = 4096  # receive 4096 bytes each time
     SEPARATOR = "<SEPARATOR>"
 
