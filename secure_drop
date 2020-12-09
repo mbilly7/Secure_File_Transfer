@@ -855,12 +855,7 @@ def send_file(filename, receiver_ip_addr):
 =======
     # * receiver IP Address and Port
     host = HOST_IP
-    print("IMPORTANT!")
-    print(len(sys.argv))
-    if len(sys.argv) > 1:
-        port = 5001
-    else:
-        port = 5002
+    port = 5001
 
     # the name of file we want to send, make sure it exists
     filename = file_path
@@ -993,8 +988,13 @@ def receive_file():
 def establishConnection():
     # find own ip
     init_ip()
+<<<<<<< HEAD
     tcp_listen = 9990 #if switch_ports else 9995
     tcp_port = 9995 #if switch_ports else 9990
+=======
+    tcp_listen = 9990
+    tcp_port = 9995
+>>>>>>> 88b6013 (remove port changing)
 
     # broadcast to other users that you exist
     tcp_listener_worker = Process(target=tcp_listener,
@@ -1046,13 +1046,17 @@ def killProcesses(procs):
             p.join()
 >>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 
+<<<<<<< HEAD
 '''
 def contacts_communication_manager(switch_ports=False):
+=======
+def contacts_communication_manager():
+>>>>>>> 88b6013 (remove port changing)
     # find own ip
     init_ip()
     #bcast_port = 1337 if switch_ports else 1338
-    tcp_listen = 9990 if switch_ports else 9995
-    tcp_port = 9995 if switch_ports else 9990
+    tcp_listen = 9990
+    tcp_port = 9995
 
     # broadcast to other users that you exist
     
@@ -1093,6 +1097,7 @@ def contacts_communication_manager(switch_ports=False):
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 def communication_manager():
 =======
@@ -1101,6 +1106,9 @@ def communication_manager():
 >>>>>>> d29135a (Update)
 '''
 <<<<<<< HEAD
+=======
+"""
+>>>>>>> 88b6013 (remove port changing)
 def communication_manager(switch_ports=False):
 >>>>>>> d1e287e (Fix listing port issue)
     # find own ip
@@ -1155,6 +1163,10 @@ def communication_manager():
                 sleep(0.1)
             if not p.is_alive():
                 print(p.join())
+<<<<<<< HEAD
+=======
+"""
+>>>>>>> 88b6013 (remove port changing)
 
 # # # # #    9. MAIN    # # # # #
 
@@ -1186,6 +1198,7 @@ def main():
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             # Start two threads - comm_manager & secureDropShell
             # 1. Start comm_manager
             th_comm_manager = Thread(target=communication_manager, daemon=True)
@@ -1208,6 +1221,9 @@ def main():
                 port, p = establishConnection()
             else:
                 port, p = establishConnection(True)
+=======
+            port, p = establishConnection()
+>>>>>>> 88b6013 (remove port changing)
             secureDropShell()
             killProcesses(p)
 >>>>>>> d1e287e (Fix listing port issue)
