@@ -776,6 +776,7 @@ def broadcast_listener(socket):
     try:
         while True:
             data = socket.recvfrom(512)
+<<<<<<< HEAD
             print(data)
 <<<<<<< HEAD
             print("THIS WAS THE MOST RECENTLY SENT MESSAGE")
@@ -783,6 +784,9 @@ def broadcast_listener(socket):
 >>>>>>> dd7f64f (work in progress: capture messages)
 =======
 >>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
+=======
+            #print(data)
+>>>>>>> 1477335 (Remove bcast_test)
     except KeyboardInterrupt:
         pass
 
@@ -1206,6 +1210,7 @@ def main():
             
             # 1. Start comm_manager
             th_comm_manager = Thread(target=communication_manager, daemon=True)
+
             th_comm_manager.start()
 >>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 
