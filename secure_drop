@@ -131,6 +131,7 @@ def shell_add():
 def shell_list():
     if os.path.getsize("contacts.bin") > 0:
 <<<<<<< HEAD
+<<<<<<< HEAD
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         broadcast_socket.bind(('', 5001))
 
@@ -168,6 +169,9 @@ def shell_list():
         else:
             sendEmailRequest(9995)
 >>>>>>> d1e287e (Fix listing port issue)
+=======
+        print("blah blah.")
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
     else:
         print("You have no contacts.")
 
@@ -622,7 +626,8 @@ def init_ip():
     global own_ip
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
-    own_ip = s.getsockname()[0]
+    own_ip = s.getsockname()[0] 
+    #host = "localhost"
     s.close()
 
 
@@ -632,6 +637,7 @@ def init_ip():
 
 class tcp_handler(BaseRequestHandler):
     def handle(self):
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
        self.data = self.request.recv(1024).strip()
@@ -651,13 +657,11 @@ class tcp_handler(BaseRequestHandler):
 =======
 >>>>>>> 6c3e54a (remove init() from tcp_handler)
 
+=======
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
         self.data = self.request.recv(1024).strip()
-
-        if isInContacts(self.data.decode("utf-8")):
-            print("Online contact: ", self.data.decode("utf-8"))
-        else:
-            print("No contacts online.")
-
+        print("Echoing message from: {}".format(self.client_address[0]))
+        print(self.data)
         self.request.sendall("ACK from server".encode())
 >>>>>>> dd7f64f (work in progress: capture messages)
 
@@ -669,15 +673,20 @@ def tcp_listener(port):
     cntx.load_cert_chain('cert.pem', 'cert.pem')
 
     server = TCPServer((host, port), tcp_handler)
-
     server.socket = cntx.wrap_socket(server.socket, server_side=True)
     try:
         server.serve_forever()
     except:
         server.shutdown()
 
+<<<<<<< HEAD
 
 def tcp_client(port, data, target_ip):
+=======
+def tcp_client(port, data):
+    host_ip = "127.0.0.1"
+
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
     # Initialize a TCP client socket using SOCK_STREAM
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     cntx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
@@ -688,6 +697,7 @@ def tcp_client(port, data, target_ip):
 
     try:
         # Establish connection to TCP server and exchange data
+<<<<<<< HEAD
 <<<<<<< HEAD
         # TODO: FIX ERROR RELATED TO THE FOLLOWING LINE
         s.connect((target_ip, port))
@@ -706,18 +716,28 @@ def tcp_client(port, data, target_ip):
             received = s.recv(1024)
         else:
             print("No contacts online.")
+=======
+        s.connect((host_ip, port))
+        s.sendall(data.encode())
+        # Read data from the TCP server and close the connection
+        received = s.recv(1024)
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
     finally:
-        # s.close() COMMENTED OUT FOR EXPERIMENTATION FOR TCP_HANDLER
-        return s
-    '''
+        s.close()
+
     print("Bytes Sent:     {}".format(data))
     print("Bytes Received: {}".format(received.decode()))
+<<<<<<< HEAD
     '''
 >>>>>>> d1e287e (Fix listing port issue)
+=======
+
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 
 #######################################
 #          Broadcast Example          #
 #######################################
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -750,15 +770,19 @@ def broadcast_listener(socket, q):
 
 
 >>>>>>> d29135a (Update)
+=======
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 def broadcast_listener(socket):
-    global MSG
     try:
         while True:
             data = socket.recvfrom(512)
             print(data)
+<<<<<<< HEAD
             print("THIS WAS THE MOST RECENTLY SENT MESSAGE")
             print(MSG)
 >>>>>>> dd7f64f (work in progress: capture messages)
+=======
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
     except KeyboardInterrupt:
         pass
 
@@ -777,8 +801,12 @@ def broadcast_sender(port, is_for_files=False):
 =======
             msg = 'bcast_test: ' + str(count)
             count += 1
+<<<<<<< HEAD
             #s.sendto(msg.encode('ascii'), ('255.255.255.255', port))
 >>>>>>> d1e287e (Fix listing port issue)
+=======
+            s.sendto(msg.encode('ascii'), ('255.255.255.255', port))
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
             sleep(5)
     except KeyboardInterrupt:
         pass
@@ -947,11 +975,11 @@ def receive_file():
 #######################################
 
 
-def establishConnection(switch_ports=False):
+def establishConnection():
     # find own ip
     init_ip()
-    tcp_listen = 9990 if switch_ports else 9995
-    tcp_port = 9995 if switch_ports else 9990
+    tcp_listen = 9990 #if switch_ports else 9995
+    tcp_port = 9995 #if switch_ports else 9990
 
     # broadcast to other users that you exist
     tcp_listener_worker = Process(target=tcp_listener,
@@ -983,6 +1011,7 @@ def killProcesses(procs):
 =======
 =======
 
+<<<<<<< HEAD
 >>>>>>> d29135a (Update)
 def killProcesses(p):
     if p.is_alive():
@@ -991,7 +1020,18 @@ def killProcesses(p):
     if not p.is_alive():
         p.join()
 
+=======
+def killProcesses(procs):
+    for p in procs:
+        print("Terminating: {}".format(p.name))
+        if p.is_alive():
+            p.terminate()
+            sleep(0.1)
+        if not p.is_alive():
+            p.join()
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 
+'''
 def contacts_communication_manager(switch_ports=False):
     # find own ip
     init_ip()
@@ -1000,7 +1040,7 @@ def contacts_communication_manager(switch_ports=False):
     tcp_port = 9995 if switch_ports else 9990
 
     # broadcast to other users that you exist
-    '''
+    
     broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     broadcast_socket.bind(('', bcast_port))
 
@@ -1011,7 +1051,6 @@ def contacts_communication_manager(switch_ports=False):
     broadcast_sender_worker = Process(target=broadcast_sender,
                                       name="broadcast_sender_worker",
                                       args=(bcast_port,))
-    '''
 
     tcp_listener_worker = Process(target=tcp_listener,
                                   name="tcp_listener_worker",
@@ -1046,12 +1085,21 @@ def communication_manager():
 
 >>>>>>> d29135a (Update)
 '''
+<<<<<<< HEAD
 def communication_manager(switch_ports=False):
 >>>>>>> d1e287e (Fix listing port issue)
     # find own ip
     init_ip()
     bcast_port = 5001
     tcp_port = 6001
+=======
+def communication_manager():
+    # find own ip
+    init_ip()
+    bcast_port = 1337 #if switch_ports else 1338
+    tcp_listen = 9990 #if switch_ports else 9995
+    tcp_port = 9995 #if switch_ports else 9990
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 
     # broadcast to other users that you exist
     #broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -1092,7 +1140,6 @@ def communication_manager(switch_ports=False):
                 sleep(0.1)
             if not p.is_alive():
                 print(p.join())
-'''
 
 # # # # #    9. MAIN    # # # # #
 
@@ -1121,6 +1168,7 @@ def main():
     # prompt log in
     if query_binary("Do you want to log in"):
         if logIn():
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             # Start two threads - comm_manager & secureDropShell
@@ -1153,6 +1201,13 @@ def main():
             # 1. Receive files
             th_receive_file = Thread(target=receive_file, daemon=True)
             th_receive_file.start()
+=======
+            # Start two threads - comm_manager & secureDropShell
+            
+            # 1. Start comm_manager
+            th_comm_manager = Thread(target=communication_manager, daemon=True)
+            th_comm_manager.start()
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 
             # 2. Shell - Supports add, list, send, exit, help
 <<<<<<< HEAD
@@ -1173,10 +1228,13 @@ def main():
 =======
             th_secureDropShell = Thread(target=secureDropShell)
             th_secureDropShell.start()
+<<<<<<< HEAD
             '''
 
             # secureDropShell()
 >>>>>>> 2247660 (Remove tqdm progress bar for sending.)
+=======
+>>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 
 
 if __name__ == "__main__":
