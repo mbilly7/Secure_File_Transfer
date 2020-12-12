@@ -210,10 +210,18 @@ def shell_list():
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         broadcast_socket.bind(('', 5000))
 
+        q = Queue()
+
         broadcast_listener_worker = Process(target=broadcast_listener,
                                             name="broadcast_listener_worker",
-                                            args=(broadcast_socket,))
+                                            args=(broadcast_socket, q, ))
+        broadcast_listener_worker.start()
 
+        while broadcast_listener_worker.is_alive():
+            print(q.get())
+        broadcast_listener_worker.join()
+
+        '''
         try:
             # *TODO - Get broadcast_listener_worker to properly work
             broadcast_listener_worker.start()
@@ -224,7 +232,11 @@ def shell_list():
                 broadcast_listener_worker.terminate()
             if not broadcast_listener_worker.is_alive():
                 broadcast_listener_worker.join()
+<<<<<<< HEAD
 >>>>>>> 665c2e2 (Start bcast listener inside shell_list())
+=======
+        '''
+>>>>>>> 0ed84c7 (Fix bcast_listener in shell_list() and capture bcast data)
     else:
         print("You have no contacts.")
 
@@ -883,6 +895,7 @@ def tcp_client(port, data):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 def broadcast_listener(socket, q):
     try:
@@ -938,6 +951,14 @@ def broadcast_listener(socket):
 =======
             print(data)
 >>>>>>> 608ebb8 (Get connection between clients working)
+=======
+def broadcast_listener(socket, q):
+    try:
+        while True:
+            data = socket.recvfrom(512)
+            #print(data)
+            q.put(data)
+>>>>>>> 0ed84c7 (Fix bcast_listener in shell_list() and capture bcast data)
     except KeyboardInterrupt:
         pass
 
@@ -1309,12 +1330,16 @@ def communication_manager():
     # find own ip
     init_ip()
 <<<<<<< HEAD
+<<<<<<< HEAD
     bcast_port = 1337 #if switch_ports else 1338
     tcp_listen = 9990 #if switch_ports else 9995
     tcp_port = 9990 #if switch_ports else 9990
 >>>>>>> 608ebb8 (Get connection between clients working)
 =======
     bcast_port = 1337  # if switch_ports else 1338
+=======
+    bcast_port = 5000  # if switch_ports else 1338
+>>>>>>> 0ed84c7 (Fix bcast_listener in shell_list() and capture bcast data)
     tcp_listen = 9990  # if switch_ports else 9995
     tcp_port = 9990  # if switch_ports else 9990
 >>>>>>> 531b716 (Autoformat)
