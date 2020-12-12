@@ -49,9 +49,21 @@ HOST_IP_3 = "172.17.0.4"
 >>>>>>> d314fce (port and host tinkering)
 =======
 
+<<<<<<< HEAD
 >>>>>>> 608ebb8 (Get connection between clients working)
 MSG = "temp"
 >>>>>>> dd7f64f (work in progress: capture messages)
+=======
+# TODO:
+# - Adding
+#     - Mutual adding only
+#     - Add only if both are online & certs trusting
+# - Listing
+#     - * John Doe <john.doe@gmail.com> instead of just email
+# - Sending
+# - Certificates signed by CA
+
+>>>>>>> 430510c (clean up + general progress)
 
 # # # # # 1. SHELL COMMANDS # # # # #
 
@@ -134,12 +146,13 @@ def secureDropShell():
             execute_command(inp)
 =======
             if email_valid and file_path_valid:
-                shell_send(email, file_path)
+                shell_send(file_path)
             else:
                 print("there was an error with either the email address or the file")
         '''
 
 
+<<<<<<< HEAD
 def shell_cd(path):
     """convert to absolute path and change directory"""
     try:
@@ -149,6 +162,8 @@ def shell_cd(path):
 >>>>>>> 608ebb8 (Get connection between clients working)
 
 
+=======
+>>>>>>> 430510c (clean up + general progress)
 def shell_help():
     print('  "add"  -> Add a new contact')
     print('  "list" -> List all online contacts')
@@ -221,7 +236,7 @@ def shell_list():
                                             args=(broadcast_socket, q, ))
         broadcast_listener_worker.start()
         receivedEmails = []
-        print("Online contacts: ")
+        print("The following contacts are online:")
 
         temp = 5
         
@@ -232,16 +247,17 @@ def shell_list():
             
             if isInContacts(email) and email not in receivedEmails:
                 receivedEmails.append(email)
-                print(email)
+                print("* " + "<" + email + ">")
 
             temp = temp - 1
-            print(temp)
+            #print(temp) #debug
 
-        #broadcast_listener_worker.join()
-        print("Terminating: {}".format(broadcast_listener_worker.name))
+        #broadcast_listener_worker.join() #TODO: do we need this?
+        #print("Terminating: {}".format(broadcast_listener_worker.name)) #debug
         broadcast_listener_worker.terminate()
-        print("Terminated")
+        #print("Terminated") #debug
 
+<<<<<<< HEAD
         '''
         try:
             # *TODO - Get broadcast_listener_worker to properly work
@@ -258,10 +274,13 @@ def shell_list():
 =======
         '''
 >>>>>>> 0ed84c7 (Fix bcast_listener in shell_list() and capture bcast data)
+=======
+>>>>>>> 430510c (clean up + general progress)
     else:
         print("You have no contacts.")
 
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 def shell_send(email, file_path):
 <<<<<<< HEAD
@@ -337,10 +356,26 @@ def shell_send():
 >>>>>>> 8384aaf (uncomment SSL stuff, fix timer)
     # send_file(file_path)
 >>>>>>> 531b716 (Autoformat)
+=======
+#def shell_send(file_path):
+def shell_send(): #debug
+>>>>>>> 430510c (clean up + general progress)
     tcp_client(9990, input())
 >>>>>>> 608ebb8 (Get connection between clients working)
 
+    # Broadcast sender's ID
+    broadcast_sender_worker_for_files = Process(target=broadcast_sender,
+                                                name="broadcast_sender_worker",
+                                                args=(bcast_port,True,))
 
+    # Receive receiver's ID
+
+    
+    # Establish (encrypted) TLS connection
+    # Confidentiality, integrity, authentication
+
+    # Send the file over the encrypted connection
+    
 def execute_command(command):
     """execute commands and handle piping"""
     try:
@@ -384,11 +419,19 @@ def execute_command(command):
             subprocess.run(command.split(" "))
     except Exception:
         print("Command not found: {}. Type `help` to view valid commands.".format(command))
+<<<<<<< HEAD
 
 
 ############################################################
 #          MILESTONE 1: USER REGISTRATION                  #
 ############################################################
+=======
+
+
+############################################################
+#          MILESTONE 1: USER REGISTRATION                  #
+############################################################        
+>>>>>>> 430510c (clean up + general progress)
 # # # # # 2. Credentials (MS 1-2) # # # # #
 
 
@@ -437,10 +480,14 @@ def getPassword():
 
 def getHashedPassword(password):
 <<<<<<< HEAD
+<<<<<<< HEAD
     # TODO: CHANGE TO 16 IN FINAL PRODUCT
 =======
     # CHANGE TO 16 IN FINAL PRODUCT
 >>>>>>> bd75a18 (Found out the problem. We need to store data captured in a seperate file (maybe a temp file))
+=======
+    # TODO: CHANGE TO 16 IN FINAL PRODUCT
+>>>>>>> 430510c (clean up + general progress)
     return bcrypt.hashpw(password.encode("utf8"), bcrypt.gensalt(12))
 
 
@@ -465,7 +512,10 @@ def checkPassword(password, hashed_password):
 #####################################################
 #          MILESTONE 2: USER LOGIN                  #
 #####################################################
+<<<<<<< HEAD
 
+=======
+>>>>>>> 430510c (clean up + general progress)
 
 def logIn():
     global SYMM_KEY
@@ -517,6 +567,7 @@ def storeUserInfo(name, email, password):
 #####################################################
 #          MILESTONE 3: ADDING CONTACTS             #
 #####################################################
+<<<<<<< HEAD
 
 # # # # # 7. Encryption # # # # #
 
@@ -547,7 +598,37 @@ def aesDecryptFile(file_name, key):
     return file_name
 
 # # # # # 4. Database # # # # #
+=======
+>>>>>>> 430510c (clean up + general progress)
 
+# # # # # 7. Encryption # # # # #
+
+def aesEncryptFile(file_name, key):
+    cipher = AES.new(key, AES.MODE_EAX)
+    data = open(file_name, 'rb').read()
+    ciphertext, tag = cipher.encrypt_and_digest(data)
+
+    file_name = file_name.replace(".txt", "")
+    file_name += ".bin"
+    file_out = open(file_name, "wb")
+    [file_out.write(x) for x in (cipher.nonce, tag, ciphertext)]
+    file_out.close()
+    chmod(file_name, 0o600)
+    os.remove("contacts.txt")
+
+
+def aesDecryptFile(file_name, key):
+    file_in = open(file_name, "rb")
+    nonce, tag, ciphertext = [file_in.read(x) for x in (16, 16, -1)]
+    cipher = AES.new(key, AES.MODE_EAX, nonce)
+    file_name = file_name.replace(".bin", "")
+    file_name += ".txt"
+    file_out = open(file_name, "wb")
+    file_out.write(cipher.decrypt_and_verify(ciphertext, tag))
+    chmod(file_name, 0o600)
+    return file_name
+
+# # # # # 4. Database # # # # #
 
 def storeData(name, email, filename):
     global SYMM_KEY
@@ -681,6 +762,19 @@ def dumpRegisterToTextFile(data, file_name):
         json.dump(data, outfile)
 
 
+<<<<<<< HEAD
+=======
+def printDataFile():
+    with open("credentials.txt") as json_file:
+        data = json.load(json_file)
+        for u in data["users"]:
+            print()
+            print("Name: " + u["name"])
+            print("Email: " + u["email"])
+            print("Password: " + u["password"])
+
+
+>>>>>>> 430510c (clean up + general progress)
 # # # # # 6. CLI # # # # #
 
 def query_binary(question, default="yes"):
@@ -724,6 +818,7 @@ def touch(fname):
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 # # # # # 7. Encryption # # # # #
 
@@ -751,6 +846,8 @@ def aesDecryptFile(file_name, key):
     file_out.write(cipher.decrypt_and_verify(ciphertext, tag))
     chmod(file_name, 0o600)
     return file_name
+=======
+>>>>>>> 430510c (clean up + general progress)
 
 <<<<<<< HEAD
 >>>>>>> 608ebb8 (Get connection between clients working)
@@ -766,9 +863,15 @@ def init_ip():
     s.close()
 
 
+<<<<<<< HEAD
 ###########################################################
 #          MILESTONE 5: SECURE FILE TRANSFER              #
 ###########################################################
+=======
+######################################################
+#          MILESTONE 4: LISTING CONTACTS             #
+######################################################
+>>>>>>> 430510c (clean up + general progress)
 
 class tcp_handler(BaseRequestHandler):
     def handle(self):
@@ -1003,10 +1106,22 @@ def broadcast_listener(socket, q):
             data = socket.recvfrom(512)
             #print(data)
             q.put(data)
+<<<<<<< HEAD
 >>>>>>> 0ed84c7 (Fix bcast_listener in shell_list() and capture bcast data)
     except KeyboardInterrupt:
         pass
 
+=======
+
+            # Received a send request, 
+            if data[2]:
+                print("Contact ' <>' is sending a file. Accept")
+                
+    except KeyboardInterrupt:
+        pass
+
+
+>>>>>>> 430510c (clean up + general progress)
 def broadcast_sender(port, is_for_files=False):
     count = 0
     try:
@@ -1033,9 +1148,16 @@ def broadcast_sender(port, is_for_files=False):
 >>>>>>> 608ebb8 (Get connection between clients working)
 =======
             msg = getEmailFromCredentials()
+<<<<<<< HEAD
 >>>>>>> 5cf1a11 (Decode broadcasted email)
             s.sendto(msg.encode('ascii'), ('255.255.255.255', port))
 >>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
+=======
+            #The third tuple element is a boolean that indicates whether or
+            #not the sender is attempting to send a file.
+            #TODO: Hash the ID's if we have time
+            s.sendto(msg.encode('ascii'), ('255.255.255.255', port), is_for_files)
+>>>>>>> 430510c (clean up + general progress)
             sleep(5)
     except KeyboardInterrupt:
         pass
@@ -1043,6 +1165,7 @@ def broadcast_sender(port, is_for_files=False):
 ##########################################################
 #        Milestone 5: Secure File Transfer               #
 ##########################################################
+<<<<<<< HEAD
 
 
 #precondition: a valid filename
@@ -1106,6 +1229,17 @@ def send_file(filename, receiver_ip_addr):
 =======
     s.close()
 >>>>>>> 2247660 (Remove tqdm progress bar for sending.)
+=======
+
+def send_file(file_path):
+
+    #Convert the file in the file path to a bytes object
+    with open(file_path, 'rb') as f:
+        contents = f.read()
+        
+        #Send it to the port via tcp_client
+        tcp_client(9990, contents, '172.17.0.4')
+>>>>>>> 430510c (clean up + general progress)
 
 
 #######################################
@@ -1479,7 +1613,11 @@ def main():
     else:
         # Handle target environment that doesn't support HTTPS verification
         ssl._create_default_https_context = _create_unverified_https_context
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 430510c (clean up + general progress)
     # credentials.txt is the file that contains user credentials
     touch("credentials.txt")
     chmod("credentials.txt", 0o600)
