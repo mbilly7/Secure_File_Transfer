@@ -164,6 +164,7 @@ def shell_list():
     if os.path.getsize("contacts.bin") > 0:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         broadcast_socket.bind(('', 5001))
 
@@ -204,6 +205,23 @@ def shell_list():
 =======
         print("blah blah.")
 >>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
+=======
+        broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        broadcast_socket.bind(('', 5000))
+    
+        broadcast_listener_worker = Process(target=broadcast_listener,
+                                        name="broadcast_listener_worker",
+                                        args=(broadcast_socket,))
+
+        try:
+            broadcast_listener_worker.start()
+            print("Starting ".format(broadcast_listener_worker.name))
+        except KeyboardInterrupt:
+            if broadcast_listener_worker.is_alive():
+                broadcast_listener_worker.terminate()
+            if not broadcast_listener_worker.is_alive():
+                broadcast_listener_worker.join()
+>>>>>>> 665c2e2 (Start bcast listener inside shell_list())
     else:
         print("You have no contacts.")
 
@@ -1280,7 +1298,11 @@ def communication_manager():
 #                                  name="receive_file_worker",)
 
     procs = [
+<<<<<<< HEAD
         # broadcast_listener_worker,
+=======
+        #broadcast_listener_worker,
+>>>>>>> 665c2e2 (Start bcast listener inside shell_list())
         broadcast_sender_worker,
         tcp_listener_worker,
 #        receive_file_worker,
@@ -1423,7 +1445,7 @@ def main():
             if KeyboardInterrupt:
                 if th_comm_manager.is_alive():
                     th_comm_manager.terminate()
-            '''
+            '''            
             # 2. Shell - Supports add, list, send, exit, help
             #th_secureDropShell = Thread(target=secureDropShell)
 <<<<<<< HEAD
