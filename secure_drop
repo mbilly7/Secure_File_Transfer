@@ -216,7 +216,7 @@ def shell_list():
 
         try:
             broadcast_listener_worker.start()
-            print("Starting ".format(broadcast_listener_worker.name))
+            print("Starting ".format(broadcast_listener_worker))
         except KeyboardInterrupt:
             if broadcast_listener_worker.is_alive():
                 broadcast_listener_worker.terminate()
@@ -1018,10 +1018,6 @@ def send_file(filename, receiver_ip_addr):
         # read the bytes from the file
         bytes_read = f.read(BUFFER_SIZE)
 
-#        if not bytes_read:
-        # file transmitting is done
-#            break
-
         # send file
         s.sendall(bytes_read)
         print("File '" + filename + "' was successfully sent.")
@@ -1102,10 +1098,6 @@ def receive_file():
     # if it works
     with open(filename, "wb") as f:
         bytes_read = client_socket.recv(BUFFER_SIZE)
-
-#        if not bytes_read:
-        # file transmitting is done
-#            break
 
         # write to the file the bytes we just received
         f.write(bytes_read)
@@ -1213,6 +1205,7 @@ def contacts_communication_manager():
 =======
 =======
 
+<<<<<<< HEAD
 >>>>>>> 531b716 (Autoformat)
 '''
 def contacts_communication_manager(switch_ports=False):
@@ -1269,6 +1262,8 @@ def contacts_communication_manager(switch_ports=False):
 '''
 
 
+=======
+>>>>>>> aa516cc (Remove comments)
 def communication_manager():
 <<<<<<< HEAD
 >>>>>>> 27bca0c (Autoformat save)
@@ -1377,8 +1372,8 @@ def communication_manager():
 """
 >>>>>>> 88b6013 (remove port changing)
 
-
 # # # # #    9. MAIN    # # # # #
+
 
 def main():
     try:
