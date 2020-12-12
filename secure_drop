@@ -12,9 +12,13 @@ import sys
 import ssl
 import socket
 <<<<<<< HEAD
+<<<<<<< HEAD
 import time
 =======
 >>>>>>> abf0bd6 (remove progress bar from receive_file(), there is a connection error in line 617)
+=======
+import time
+>>>>>>> f0f8178 (Fix contact listing)
 from time import sleep
 from multiprocessing import Process, Queue
 from socketserver import BaseRequestHandler, TCPServer
@@ -216,11 +220,20 @@ def shell_list():
                                             name="broadcast_listener_worker",
                                             args=(broadcast_socket, q, ))
         broadcast_listener_worker.start()
-
+        receivedEmails = []
+        print("Online contacts: ")
         while broadcast_listener_worker.is_alive():
-            print(q.get()[0].decode("utf-8"))
-            #if q.get().decode("utf-8") 
-        broadcast_listener_worker.join()
+            data = q.get()
+            email = data[0].decode("utf-8")
+            ip_addr = data[1][0]
+            
+            if isInContacts(email) and email not in receivedEmails:
+                receivedEmails.append(email)
+                print(email)
+        #broadcast_listener_worker.join()
+        print("Terminating: {}".format(broadcast_listener_worker.name))
+        broadcast_listener_worker.terminate()
+        print("Terminated")
 
         '''
         try:
@@ -772,6 +785,11 @@ class tcp_handler(BaseRequestHandler):
         self.data = self.request.recv(1024).strip()
         print("Echoing message from: {}".format(self.client_address[0]))
         print(self.data)
+        '''
+        if validate_email(self.data.decode("utf-8")):
+            if isInContacts(self.data.decode("utf-8")):
+                print("")
+        '''
         self.request.sendall("ACK from server".encode())
 >>>>>>> dd7f64f (work in progress: capture messages)
 
@@ -809,6 +827,7 @@ def tcp_client(port, data, target_ip):
 =======
 =======
 
+<<<<<<< HEAD
 >>>>>>> 27bca0c (Autoformat save)
 =======
 >>>>>>> 608ebb8 (Get connection between clients working)
@@ -839,6 +858,11 @@ def tcp_client(port, data):
 =======
 
 >>>>>>> 531b716 (Autoformat)
+=======
+def tcp_client(port, data, target_ip):
+    # TODO: MAYBE CHANGE host_ip TO DOCKER CONTAINER IP
+    #host_ip = "127.0.0.1"
+>>>>>>> f0f8178 (Fix contact listing)
     # Initialize a TCP client socket using SOCK_STREAM
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     #cntx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
@@ -854,6 +878,7 @@ def tcp_client(port, data):
 <<<<<<< HEAD
         # TODO: FIX ERROR RELATED TO THE FOLLOWING LINE
         s.connect((target_ip, port))
+<<<<<<< HEAD
         s.sendall(data)
         # Read data from the TCP server and close the connection
         received = s.recv(1024)
@@ -874,6 +899,8 @@ def tcp_client(port, data):
         # TODO: FIX ERROR RELATED TO THE FOLLOWING LINE
 >>>>>>> 80442f2 (Test threading)
         s.connect((host_ip, port))
+=======
+>>>>>>> f0f8178 (Fix contact listing)
         s.sendall(data.encode())
         # Read data from the TCP server and close the connection
         received = s.recv(1024)
@@ -1151,6 +1178,7 @@ def receive_file():
 #               Driver                #
 #######################################
 
+<<<<<<< HEAD
 
 def establishConnection():
     # find own ip
@@ -1197,6 +1225,11 @@ def sendEmail(tcp_port):
     tcp_client(tcp_port, getEmailFromCredentials())
 
 
+=======
+def sendEmail(tcp_port):
+    tcp_client(tcp_port, getEmailFromCredentials())
+
+>>>>>>> f0f8178 (Fix contact listing)
 def killProcesses(procs):
     for p in procs:
         print("Terminating: {}".format(p.name))
