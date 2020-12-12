@@ -218,7 +218,8 @@ def shell_list():
         broadcast_listener_worker.start()
 
         while broadcast_listener_worker.is_alive():
-            print(q.get())
+            print(q.get()[0].decode("utf-8"))
+            #if q.get().decode("utf-8") 
         broadcast_listener_worker.join()
 
         '''
@@ -970,6 +971,7 @@ def broadcast_sender(port, is_for_files=False):
         while True:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             msg = getEmailFromCredentials() + " " + str(is_for_files)
             # The third tuple element is a boolean that indicates whether or
             # not the sender is attempting to send a file.
@@ -985,6 +987,9 @@ def broadcast_sender(port, is_for_files=False):
 =======
             msg = 'Broadcast from SecureDrop User: ' + getEmailFromCredentials()
 >>>>>>> 608ebb8 (Get connection between clients working)
+=======
+            msg = getEmailFromCredentials()
+>>>>>>> 5cf1a11 (Decode broadcasted email)
             s.sendto(msg.encode('ascii'), ('255.255.255.255', port))
 >>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
             sleep(5)
