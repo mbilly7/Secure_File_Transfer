@@ -11,14 +11,7 @@ import re
 import sys
 import ssl
 import socket
-<<<<<<< HEAD
-<<<<<<< HEAD
 import time
-=======
->>>>>>> abf0bd6 (remove progress bar from receive_file(), there is a connection error in line 617)
-=======
-import time
->>>>>>> f0f8178 (Fix contact listing)
 from time import sleep
 from multiprocessing import Process, Queue
 from socketserver import BaseRequestHandler, TCPServer
@@ -29,8 +22,6 @@ from os import chmod
 
 own_ip = None
 SYMM_KEY = "stub"
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 # TODO:
 # - Adding
@@ -39,31 +30,6 @@ SYMM_KEY = "stub"
 # - Sending
 # - Certificates signed by CA
 
-=======
-HOST_IP = "127.0.0.1"
-=======
-#HOST_IP_1 = "127.0.0.2"
-HOST_IP_2 = "172.17.0.3"
-HOST_IP_3 = "172.17.0.4"
-<<<<<<< HEAD
->>>>>>> d314fce (port and host tinkering)
-=======
-
-<<<<<<< HEAD
->>>>>>> 608ebb8 (Get connection between clients working)
-MSG = "temp"
->>>>>>> dd7f64f (work in progress: capture messages)
-=======
-# TODO:
-# - Adding
-#     - Mutual adding only
-#     - Add only if both are online & certs trusting
-# - Listing
-#     - * John Doe <john.doe@gmail.com> instead of just email
-# - Sending
-# - Certificates signed by CA
-
->>>>>>> 430510c (clean up + general progress)
 
 # # # # # 1. SHELL COMMANDS # # # # #
 
@@ -79,18 +45,8 @@ def secureDropShell():
             shell_add()
         elif inp == "list":
             shell_list()
-<<<<<<< HEAD
         elif inp == "send":
-<<<<<<< HEAD
             print("Did not provide enough arguments. Syntax: send <email> <file_path>.")
-=======
-            shell_send()
-        else:
-            execute_command(inp)
-        '''
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
->>>>>>> 01595e1 (Get file sending somewhat working)
         elif inp[:5] == "send ":
             words = inp.split()
 
@@ -116,57 +72,16 @@ def secureDropShell():
                     else:
                         file_path_valid = True
 
-<<<<<<< HEAD
                 except FileNotFoundError:
                     print("The provided file path does not exist.")
-=======
-            # Check if email is contacts
-            if os.path.getsize("contacts.bin") > 0:
-                if not isInContacts(email):
-                    print("provided email address is not in your contacts list")
-                else:
-                    email_valid = True
-                    print("email correct")  # debug
-<<<<<<< HEAD
->>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
 
                 if email_valid and file_path_valid:
                     shell_send(email, file_path)
-=======
-            try:
-                if os.path.getsize(file_path) == 0:  # change criteria later?
-                    print("provided file is empty")
-                else:
-                    file_path_valid = True
-                    print("file correct")  # debug
 
-            except FileNotFoundError:
-                print("provided file path does not exist")
->>>>>>> 2e37c75 (handle FileNotFoundError)
-
-<<<<<<< HEAD
-        else:
-            execute_command(inp)
-=======
-            if email_valid and file_path_valid:
-                shell_send(file_path)
-            else:
-                print("there was an error with either the email address or the file")
         else:
             execute_command(inp)
 
-<<<<<<< HEAD
-def shell_cd(path):
-    """convert to absolute path and change directory"""
-    try:
-        os.chdir(os.path.abspath(path))
-    except Exception:
-        print("cd: no such file or directory: {}".format(path))
->>>>>>> 608ebb8 (Get connection between clients working)
 
-
-=======
->>>>>>> 430510c (clean up + general progress)
 def shell_help():
     print('  "add"  -> Add a new contact')
     print('  "list" -> List all online contacts')
@@ -185,9 +100,6 @@ def shell_add():
 
 def shell_list():
     if os.path.getsize("contacts.bin") > 0:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         broadcast_socket.bind(('', 5001))
 
@@ -219,94 +131,11 @@ def shell_list():
         # broadcast_listener_worker.join() #TODO: do we need this?
         broadcast_listener_worker.terminate()
 
-=======
-        if len(sys.argv) > 1:
-            sendEmailRequest(9990)
-        else:
-            sendEmailRequest(9995)
->>>>>>> d1e287e (Fix listing port issue)
-=======
-        print("blah blah.")
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-=======
-        broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        broadcast_socket.bind(('', 5000))
-
-        q = Queue()
-
-        broadcast_listener_worker = Process(target=broadcast_listener,
-                                            name="broadcast_listener_worker",
-                                            args=(broadcast_socket, q, ))
-        broadcast_listener_worker.start()
-        receivedEmails = []
-        print("The following contacts are online:")
-
-        temp = 5
-        
-        while broadcast_listener_worker.is_alive() and temp != 0:
-            data = q.get()
-            email = data[0].decode("utf-8")
-            ip_addr = data[1][0]
-            
-            if isInContacts(email) and email not in receivedEmails:
-                receivedEmails.append(email)
-                print("* " + "<" + email + ">")
-
-            temp = temp - 1
-            #print(temp) #debug
-
-        #broadcast_listener_worker.join() #TODO: do we need this?
-        #print("Terminating: {}".format(broadcast_listener_worker.name)) #debug
-        broadcast_listener_worker.terminate()
-        #print("Terminated") #debug
-
-<<<<<<< HEAD
-        '''
-        try:
-            # *TODO - Get broadcast_listener_worker to properly work
-            broadcast_listener_worker.start()
-            print("Starting ".format(broadcast_listener_worker.name))
-
-        except KeyboardInterrupt:
-            if broadcast_listener_worker.is_alive():
-                broadcast_listener_worker.terminate()
-            if not broadcast_listener_worker.is_alive():
-                broadcast_listener_worker.join()
-<<<<<<< HEAD
->>>>>>> 665c2e2 (Start bcast listener inside shell_list())
-=======
-        '''
->>>>>>> 0ed84c7 (Fix bcast_listener in shell_list() and capture bcast data)
-=======
->>>>>>> 430510c (clean up + general progress)
     else:
         print("You have no contacts.")
 
-<<<<<<< HEAD
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 def shell_send(email, file_path):
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    print("  Sending!")
-    if len(sys.argv) > 1:
-        communication_manager()
-    else:
-        communication_manager(True)
-#    send_file(file_path)
->>>>>>> dd7f64f (work in progress: capture messages)
-=======
-    # print("  Sending!")
-    # if len(sys.argv) > 1:
-    #     communication_manager()
-    # else:
-    #     communication_manager(True)
-    send_file(file_path)
->>>>>>> 2247660 (Remove tqdm progress bar for sending.)
 
     global own_ip
     
@@ -351,40 +180,7 @@ def shell_send(email, file_path):
     #kill processes
     #broadcast_sender_worker_for_files.terminate()
     #broadcast_listener_worker_for_files.terminate()
-=======
-    #send_file(file_path)
-=======
-=======
-#def shell_send(email, file_path):
-def shell_send():
->>>>>>> 8384aaf (uncomment SSL stuff, fix timer)
-    # send_file(file_path)
->>>>>>> 531b716 (Autoformat)
-=======
-#def shell_send(file_path):
-def shell_send(): #debug
->>>>>>> 430510c (clean up + general progress)
-    tcp_client(9990, input())
->>>>>>> 608ebb8 (Get connection between clients working)
 
-=======
-def shell_send(file_path):
-    send_file("credentials.txt")
->>>>>>> 01595e1 (Get file sending somewhat working)
-    # Broadcast sender's ID
-    '''
-    broadcast_sender_worker_for_files = Process(target=broadcast_sender,
-                                                name="broadcast_sender_worker",
-                                                args=(bcast_port,True,))
-    '''
-    # Receive receiver's ID
-
-    
-    # Establish (encrypted) TLS connection
-    # Confidentiality, integrity, authentication
-
-    # Send the file over the encrypted connection
-    
 def execute_command(command):
     """execute commands and handle piping"""
     try:
@@ -428,19 +224,11 @@ def execute_command(command):
             subprocess.run(command.split(" "))
     except Exception:
         print("Command not found: {}. Type `help` to view valid commands.".format(command))
-<<<<<<< HEAD
 
 
 ############################################################
 #          MILESTONE 1: USER REGISTRATION                  #
 ############################################################
-=======
-
-
-############################################################
-#          MILESTONE 1: USER REGISTRATION                  #
-############################################################        
->>>>>>> 430510c (clean up + general progress)
 # # # # # 2. Credentials (MS 1-2) # # # # #
 
 
@@ -488,15 +276,7 @@ def getPassword():
 
 
 def getHashedPassword(password):
-<<<<<<< HEAD
-<<<<<<< HEAD
     # TODO: CHANGE TO 16 IN FINAL PRODUCT
-=======
-    # CHANGE TO 16 IN FINAL PRODUCT
->>>>>>> bd75a18 (Found out the problem. We need to store data captured in a seperate file (maybe a temp file))
-=======
-    # TODO: CHANGE TO 16 IN FINAL PRODUCT
->>>>>>> 430510c (clean up + general progress)
     return bcrypt.hashpw(password.encode("utf8"), bcrypt.gensalt(12))
 
 
@@ -521,10 +301,7 @@ def checkPassword(password, hashed_password):
 #####################################################
 #          MILESTONE 2: USER LOGIN                  #
 #####################################################
-<<<<<<< HEAD
 
-=======
->>>>>>> 430510c (clean up + general progress)
 
 def logIn():
     global SYMM_KEY
@@ -576,7 +353,6 @@ def storeUserInfo(name, email, password):
 #####################################################
 #          MILESTONE 3: ADDING CONTACTS             #
 #####################################################
-<<<<<<< HEAD
 
 # # # # # 7. Encryption # # # # #
 
@@ -607,37 +383,7 @@ def aesDecryptFile(file_name, key):
     return file_name
 
 # # # # # 4. Database # # # # #
-=======
->>>>>>> 430510c (clean up + general progress)
 
-# # # # # 7. Encryption # # # # #
-
-def aesEncryptFile(file_name, key):
-    cipher = AES.new(key, AES.MODE_EAX)
-    data = open(file_name, 'rb').read()
-    ciphertext, tag = cipher.encrypt_and_digest(data)
-
-    file_name = file_name.replace(".txt", "")
-    file_name += ".bin"
-    file_out = open(file_name, "wb")
-    [file_out.write(x) for x in (cipher.nonce, tag, ciphertext)]
-    file_out.close()
-    chmod(file_name, 0o600)
-    os.remove("contacts.txt")
-
-
-def aesDecryptFile(file_name, key):
-    file_in = open(file_name, "rb")
-    nonce, tag, ciphertext = [file_in.read(x) for x in (16, 16, -1)]
-    cipher = AES.new(key, AES.MODE_EAX, nonce)
-    file_name = file_name.replace(".bin", "")
-    file_name += ".txt"
-    file_out = open(file_name, "wb")
-    file_out.write(cipher.decrypt_and_verify(ciphertext, tag))
-    chmod(file_name, 0o600)
-    return file_name
-
-# # # # # 4. Database # # # # #
 
 def storeData(name, email, filename):
     global SYMM_KEY
@@ -670,29 +416,6 @@ def isInContacts(data):
                 exists = True
     return exists
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-=======
-
->>>>>>> d29135a (Update)
-def getEmailFromCredentials():
-    with open("credentials.txt") as json_file:
-        data = json.load(json_file)
-        for user in data["users"]:
-            email = user["email"]
-    return email
->>>>>>> d1e287e (Fix listing port issue)
-
-
-def getObjs(filename):
-    global SYMM_KEY
-    aesDecryptFile("contacts.bin", SYMM_KEY)
-
-    objs = []
->>>>>>> bd75a18 (Found out the problem. We need to store data captured in a seperate file (maybe a temp file))
 
 #{'bob': {'name': 'bob', 'email': 'bob@gmail.com'}}
 def getNameFromEmail(email):
@@ -703,17 +426,12 @@ def getNameFromEmail(email):
                 return x[y]["name"]
     return "MR. BEAN"
 
-<<<<<<< HEAD
 def getNameFromCredentials():
     with open("credentials.txt") as json_file:
         data = json.load(json_file)
         for user in data["users"]:
             name = user["name"]
     return name
-=======
-    print(objs)
-    dbfile.close()
->>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
 
 def getEmailFromCredentials():
     with open("credentials.txt") as json_file:
@@ -771,19 +489,6 @@ def dumpRegisterToTextFile(data, file_name):
         json.dump(data, outfile)
 
 
-<<<<<<< HEAD
-=======
-def printDataFile():
-    with open("credentials.txt") as json_file:
-        data = json.load(json_file)
-        for u in data["users"]:
-            print()
-            print("Name: " + u["name"])
-            print("Email: " + u["email"])
-            print("Password: " + u["password"])
-
-
->>>>>>> 430510c (clean up + general progress)
 # # # # # 6. CLI # # # # #
 
 def query_binary(question, default="yes"):
@@ -826,67 +531,20 @@ def touch(fname):
         open(fname, 'a').close()
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-# # # # # 7. Encryption # # # # #
-
-def aesEncryptFile(file_name, key):
-    cipher = AES.new(key, AES.MODE_EAX)
-    data = open(file_name, 'rb').read()
-    ciphertext, tag = cipher.encrypt_and_digest(data)
-
-    file_name = file_name.replace(".txt", "")
-    file_name += ".bin"
-    file_out = open(file_name, "wb")
-    [file_out.write(x) for x in (cipher.nonce, tag, ciphertext)]
-    file_out.close()
-    chmod(file_name, 0o600)
-    os.remove("contacts.txt")
-
-
-def aesDecryptFile(file_name, key):
-    file_in = open(file_name, "rb")
-    nonce, tag, ciphertext = [file_in.read(x) for x in (16, 16, -1)]
-    cipher = AES.new(key, AES.MODE_EAX, nonce)
-    file_name = file_name.replace(".bin", "")
-    file_name += ".txt"
-    file_out = open(file_name, "wb")
-    file_out.write(cipher.decrypt_and_verify(ciphertext, tag))
-    chmod(file_name, 0o600)
-    return file_name
-=======
->>>>>>> 430510c (clean up + general progress)
-
-<<<<<<< HEAD
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
-
->>>>>>> 531b716 (Autoformat)
 def init_ip():
     global own_ip
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     own_ip = s.getsockname()[0]
-    #host = "localhost"
     s.close()
 
 
-<<<<<<< HEAD
 ###########################################################
 #          MILESTONE 5: SECURE FILE TRANSFER              #
 ###########################################################
-=======
-######################################################
-#          MILESTONE 4: LISTING CONTACTS             #
-######################################################
->>>>>>> 430510c (clean up + general progress)
 
 class tcp_handler(BaseRequestHandler):
     def handle(self):
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
        self.data = self.request.recv(1024).strip()
        receive_file(self.data)
        print("Echoing message: {}", self.data)#temp
@@ -898,51 +556,13 @@ class tcp_handler(BaseRequestHandler):
            
        #print("")
        self.request.sendall("ACK from server".encode())
-=======
-        global MSG
-        self.data = self.request.recv(1024).strip()
-=======
->>>>>>> 6c3e54a (remove init() from tcp_handler)
-
-=======
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-        self.data = self.request.recv(1024).strip()
-        print("Echoing message from: {}".format(self.client_address[0]))
-        print(self.data)
-        '''
-        if validate_email(self.data.decode("utf-8")):
-            if isInContacts(self.data.decode("utf-8")):
-                print("")
-        '''
-<<<<<<< HEAD
-        self.request.sendall("ACK from server".encode())
->>>>>>> dd7f64f (work in progress: capture messages)
-=======
-        #self.request.sendall("ACK from server".encode())
->>>>>>> 01595e1 (Get file sending somewhat working)
 
 
 def tcp_listener(port):
-<<<<<<< HEAD
-<<<<<<< HEAD
     global own_ip
     host = own_ip
     cntx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     cntx.load_cert_chain('cert.pem', 'cert.pem')
-=======
-    host = "172.17.0.2"
-=======
-    global own_ip
-    host = own_ip
-<<<<<<< HEAD
->>>>>>> 3e50eda (Change host to own_ip in tcp_listener)
-    #cntx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    #cntx.load_cert_chain('cert.pem', 'cert.pem')
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
-    cntx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    cntx.load_cert_chain('cert.pem', 'cert.pem')
->>>>>>> 8384aaf (uncomment SSL stuff, fix timer)
 
     server = TCPServer((host, port), tcp_handler)
     server.socket = cntx.wrap_socket(server.socket, server_side=True)
@@ -951,51 +571,8 @@ def tcp_listener(port):
     except:
         server.shutdown()
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 def tcp_client(port, data, target_ip):
-=======
-=======
-
-<<<<<<< HEAD
->>>>>>> 27bca0c (Autoformat save)
-=======
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
-
->>>>>>> 531b716 (Autoformat)
-def tcp_client(port, data):
-<<<<<<< HEAD
-    host_ip = "127.0.0.1"
-
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-=======
-    # TODO: MAYBE CHANGE host_ip TO DOCKER CONTAINER IP
-    #host_ip = "127.0.0.1"
-<<<<<<< HEAD
-    host_ip = "172.17.0.2"
-<<<<<<< HEAD
-    
->>>>>>> 80442f2 (Test threading)
-=======
-
->>>>>>> 27bca0c (Autoformat save)
-=======
-    host_ip = "172.17.0.3"
-<<<<<<< HEAD
-    
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
-
->>>>>>> 531b716 (Autoformat)
-=======
-def tcp_client(port, data, target_ip):
-    # TODO: MAYBE CHANGE host_ip TO DOCKER CONTAINER IP
-    #host_ip = "127.0.0.1"
->>>>>>> f0f8178 (Fix contact listing)
     # Initialize a TCP client socket using SOCK_STREAM
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     cntx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
@@ -1006,61 +583,18 @@ def tcp_client(port, data, target_ip):
 
     try:
         # Establish connection to TCP server and exchange data
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         # TODO: FIX ERROR RELATED TO THE FOLLOWING LINE
         s.connect((target_ip, port))
-<<<<<<< HEAD
-<<<<<<< HEAD
         s.sendall(data)
         # Read data from the TCP server and close the connection
         received = s.recv(1024)
     finally:
         s.close()
 
-=======
-        result = s.connect_ex((HOST_IP, port))
-        #print("RESULT: ", result)
-        if result == 0:
-            s.sendall(data.encode())
-            # Read data from the TCP server and close the connection
-            received = s.recv(1024)
-        else:
-            print("No contacts online.")
-=======
-=======
-        # TODO: FIX ERROR RELATED TO THE FOLLOWING LINE
->>>>>>> 80442f2 (Test threading)
-        s.connect((host_ip, port))
-=======
->>>>>>> f0f8178 (Fix contact listing)
-        s.sendall(data.encode())
-=======
-        s.sendall(data)
->>>>>>> 01595e1 (Get file sending somewhat working)
-        # Read data from the TCP server and close the connection
-        received = s.recv(1024)
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-    finally:
-        s.close()
-
-    print("Bytes Sent:     {}".format(data))
-    print("Bytes Received: {}".format(received.decode()))
-<<<<<<< HEAD
-    '''
->>>>>>> d1e287e (Fix listing port issue)
-=======
-
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 
 #######################################
 #          Broadcast Example          #
 #######################################
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 def broadcast_listener(socket, q):
     try:
@@ -1086,103 +620,20 @@ def broadcast_listener(socket, q):
                 else:
                     print("todo: they declined")
 
-=======
-=======
-
-
->>>>>>> d29135a (Update)
-=======
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-def broadcast_listener(socket):
-    try:
-        while True:
-            data = socket.recvfrom(512)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            print(data)
-<<<<<<< HEAD
-            print("THIS WAS THE MOST RECENTLY SENT MESSAGE")
-            print(MSG)
->>>>>>> dd7f64f (work in progress: capture messages)
-=======
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-=======
-            #print(data)
->>>>>>> 1477335 (Remove bcast_test)
-=======
-            # print(data)
->>>>>>> 27bca0c (Autoformat save)
-=======
-            print(data)
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
-def broadcast_listener(socket, q):
-    try:
-        while True:
-            data = socket.recvfrom(512)
-            #print(data)
-            q.put(data)
-<<<<<<< HEAD
->>>>>>> 0ed84c7 (Fix bcast_listener in shell_list() and capture bcast data)
     except KeyboardInterrupt:
         pass
 
-=======
-
-            # Received a send request, 
-            if data[2]:
-                print("Contact ' <>' is sending a file. Accept")
-                
-    except KeyboardInterrupt:
-        pass
-
-
->>>>>>> 430510c (clean up + general progress)
 def broadcast_sender(port, is_for_files=False):
     count = 0
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         while True:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             msg = getEmailFromCredentials() + " " + str(is_for_files)
             # The third tuple element is a boolean that indicates whether or
             # not the sender is attempting to send a file.
             # TODO: Hash the ID's if we have time
             s.sendto(msg.encode('ascii'), ('255.255.255.255', port))
-=======
-            msg = 'bcast_test: ' + str(count)
-            count += 1
-<<<<<<< HEAD
-            #s.sendto(msg.encode('ascii'), ('255.255.255.255', port))
->>>>>>> d1e287e (Fix listing port issue)
-=======
-=======
-            msg = 'Broadcast from SecureDrop User: ' + getEmailFromCredentials()
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
-            msg = getEmailFromCredentials()
-<<<<<<< HEAD
->>>>>>> 5cf1a11 (Decode broadcasted email)
-            s.sendto(msg.encode('ascii'), ('255.255.255.255', port))
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-=======
-            #The third tuple element is a boolean that indicates whether or
-            #not the sender is attempting to send a file.
-            #TODO: Hash the ID's if we have time
-            s.sendto(msg.encode('ascii'), ('255.255.255.255', port), is_for_files)
->>>>>>> 430510c (clean up + general progress)
-=======
-            msg = getEmailFromCredentials() + " " + str(is_for_files)
-            #The third tuple element is a boolean that indicates whether or
-            #not the sender is attempting to send a file.
-            #TODO: Hash the ID's if we have time
-            s.sendto(msg.encode('ascii'), ('255.255.255.255', port))
->>>>>>> 01595e1 (Get file sending somewhat working)
             sleep(5)
     except KeyboardInterrupt:
         pass
@@ -1190,7 +641,6 @@ def broadcast_sender(port, is_for_files=False):
 ##########################################################
 #        Milestone 5: Secure File Transfer               #
 ##########################################################
-<<<<<<< HEAD
 
 
 #precondition: a valid filename
@@ -1198,7 +648,6 @@ def send_file(filename, receiver_ip_addr):
 
     SEPARATOR = "<SEPARATOR>"
 
-<<<<<<< HEAD
     # the name of file we want to send, make sure it exists
     filesize = os.path.getsize(filename)
 
@@ -1214,219 +663,35 @@ def send_file(filename, receiver_ip_addr):
         # Send it to the port via tcp_client
 
         tcp_client(6001, data.encode(), receiver_ip_addr)
-=======
-    # * receiver IP Address and Port
-    host = HOST_IP
-    print("IMPORTANT!")
-    print(len(sys.argv))
-    if len(sys.argv) > 1:
-        port = 5001
-    else:
-        port = 5002
-
-    # the name of file we want to send, make sure it exists
-    filename = file_path
-    filesize = os.path.getsize(filename)
-
-    # create the client socket
-    s = socket.socket()
-
-    print(f"[+] Connecting to {host}:{port}")
-    s.connect((host, port))
-    print("[+] Connected.")
-
-    # send the filename and filesize
-    s.send(f"{filename}{SEPARATOR}{filesize}".encode())
-
-    # * start sending the file
-    with open(filename, "rb") as f:
-        # read the bytes from the file
-        bytes_read = f.read(BUFFER_SIZE)
-
-        # send file
-        s.sendall(bytes_read)
-        print("File '" + filename + "' was successfully sent.")
-
-    # ! WARNING: PROBABLY NEED TO CLOSE THIS
-<<<<<<< HEAD
-    # s.close()
->>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
-=======
-    s.close()
->>>>>>> 2247660 (Remove tqdm progress bar for sending.)
-=======
-
-def send_file(file_path):
-
-    #Convert the file in the file path to a bytes object
-    with open(file_path, 'rb') as f:
-        # TODO: Maybe add buffer size as arg to read()
-        contents = f.read()
-        
-        #Send it to the port via tcp_client
-<<<<<<< HEAD
-        tcp_client(9990, contents, '172.17.0.4')
->>>>>>> 430510c (clean up + general progress)
-=======
-        tcp_client(9990, contents, '172.17.0.3')
->>>>>>> 01595e1 (Get file sending somewhat working)
 
 
 #######################################
 #            Receive File             #
 #######################################
-<<<<<<< HEAD
 def receive_file(message):
     SEPARATOR = "<SEPARATOR>"
 
     filename, filesize, contents = message.decode().split(SEPARATOR)
-=======
-def receive_file():
-    # device's IP address
-    SERVER_HOST = HOST_IP
-    SERVER_PORT = 5001
-    BUFFER_SIZE = 4096  # receive 4096 bytes each time
-    SEPARATOR = "<SEPARATOR>"
-
-    # create the server socket
-    s = socket.socket()
-
-    # bind the socket to our local address
-    s.bind((SERVER_HOST, SERVER_PORT))
-
-    # enabling our server to accept connections
-    s.listen(5)
-    print(f"[*] Listening as {SERVER_HOST}:{SERVER_PORT}")
-
-    # accept connection if there is any
-    client_socket, address = s.accept()
-    # if below code is executed, that means the sender is connected
-    print(f"[+] {address} is connected.")
-
-    # receive the file infos
-    # receive using client socket, not server socket
-    received = client_socket.recv(BUFFER_SIZE).decode()
-    filename, filesize = received.split(SEPARATOR)
-    # remove absolute path if there is
->>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
     filename = os.path.basename(filename)
 
     # Filesize is not actually used. TODO: Remove.
     filesize = int(filesize)
     filesize += 1
 
-<<<<<<< HEAD
     # TODO: Test sending/receiving files greater than 4096 bytes large.
-=======
-    # start receiving the file from the socket and writing to the file stream
-<<<<<<< HEAD
-    progress = tqdm.tqdm(range(
-        filesize), "...", unit="B", unit_scale=True, unit_divisor=1024)
->>>>>>> 2247660 (Remove tqdm progress bar for sending.)
     with open(filename, "wb") as f:
-<<<<<<< HEAD
         f.write(contents.encode())
         print("File '" + filename + "' was successfully received.")
-=======
-        for _ in progress:
-            # read 1024 bytes from the socket (receive)
-            bytes_read = client_socket.recv(BUFFER_SIZE)
-=======
-    # read 1024 bytes from the socket (receive)
->>>>>>> abf0bd6 (remove progress bar from receive_file(), there is a connection error in line 617)
-
-    # NOTE: test sending/receiving files greater than 4096 bytes large to see
-    # if it works
-    with open(filename, "wb") as f:
-        bytes_read = client_socket.recv(BUFFER_SIZE)
-
-        # write to the file the bytes we just received
-        f.write(bytes_read)
-
-        print("File '" + filename + "' was successfully received.")
-
-    # ! WARNING: PROBABLY NEED TO CLOSE THIS
-<<<<<<< HEAD
-    # client_socket.close()
-    # s.close()
->>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
-=======
-    client_socket.close()
-    s.close()
->>>>>>> 2247660 (Remove tqdm progress bar for sending.)
 
 #######################################
 #               Driver                #
 #######################################
 
-<<<<<<< HEAD
-
-def establishConnection():
-    # find own ip
-    init_ip()
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    tcp_listen = 9990 #if switch_ports else 9995
-    tcp_port = 9995 #if switch_ports else 9990
-=======
-    tcp_listen = 9990
-    tcp_port = 9995
->>>>>>> 88b6013 (remove port changing)
-=======
-    tcp_listen = 9990 #if switch_ports else 9995
-    tcp_port = 9995 #if switch_ports else 9990
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
-    tcp_listen = 9990  # if switch_ports else 9995
-    tcp_port = 9995  # if switch_ports else 9990
->>>>>>> 531b716 (Autoformat)
-
-    # broadcast to other users that you exist
-    tcp_listener_worker = Process(target=tcp_listener,
-                                  name="tcp_listener_worker",
-                                  args=(tcp_listen,))
-
-    tcp_listener_worker.start()
-    print("Connection established.")
-
-    return tcp_port, tcp_listener_worker
-
 
 def sendEmail(tcp_port):
     tcp_client(tcp_port, getEmailFromCredentials())
 
 
-def sendEmailRequest(tcp_port):
-    tcp_client(tcp_port, "Requesting Email.")
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-def sendEmail(tcp_port):
-    tcp_client(tcp_port, getEmailFromCredentials())
-
-
-=======
-def sendEmail(tcp_port):
-    tcp_client(tcp_port, getEmailFromCredentials())
-
->>>>>>> f0f8178 (Fix contact listing)
-def killProcesses(procs):
-    for p in procs:
-        print("Terminating: {}".format(p.name))
-=======
-=======
-
-<<<<<<< HEAD
->>>>>>> d29135a (Update)
-def killProcesses(p):
-    if p.is_alive():
-        p.terminate()
-        print("Process terminated.")
-    if not p.is_alive():
-        p.join()
-
-=======
 def killProcesses(procs):
     for p in procs:
         print("Terminating: {}".format(p.name))
@@ -1435,133 +700,13 @@ def killProcesses(procs):
             sleep(0.1)
         if not p.is_alive():
             p.join()
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-'''
-def contacts_communication_manager(switch_ports=False):
-=======
-=======
-
-<<<<<<< HEAD
->>>>>>> 27bca0c (Autoformat save)
-def contacts_communication_manager():
->>>>>>> 88b6013 (remove port changing)
-=======
-=======
-
-<<<<<<< HEAD
->>>>>>> 531b716 (Autoformat)
-'''
-def contacts_communication_manager(switch_ports=False):
->>>>>>> 608ebb8 (Get connection between clients working)
-    # find own ip
-    init_ip()
-    #bcast_port = 1337 if switch_ports else 1338
-    tcp_listen = 9990 if switch_ports else 9995
-    tcp_port = 9995 if switch_ports else 9990
-
-    # broadcast to other users that you exist
-    
-    broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    broadcast_socket.bind(('', bcast_port))
-
-    broadcast_listener_worker = Process(target=broadcast_listener,
-                                        name="broadcast_listener_worker",
-                                        args=(broadcast_socket,))
-
-    broadcast_sender_worker = Process(target=broadcast_sender,
-                                      name="broadcast_sender_worker",
-                                      args=(bcast_port,))
-
-    tcp_listener_worker = Process(target=tcp_listener,
-                                  name="tcp_listener_worker",
-                                  args=(tcp_listen,))
-
-    procs = [
-        # broadcast_listener_worker,
-        # broadcast_sender_worker,
-        tcp_listener_worker,
-    ]
-
-    for p in procs:
-        #print("Starting: {}".format(p.name))
-        p.start()
-        tcp_client(tcp_port, getEmailFromCredentials())
-
-    for p in procs:
-        #print("Terminating: {}".format(p.name))
->>>>>>> d1e287e (Fix listing port issue)
-        if p.is_alive():
-            p.terminate()
-            sleep(0.1)
-        if not p.is_alive():
-            p.join()
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-'''
-
-
-=======
->>>>>>> aa516cc (Remove comments)
-def communication_manager():
-<<<<<<< HEAD
->>>>>>> 27bca0c (Autoformat save)
 
 def communication_manager():
-=======
-=======
-
->>>>>>> d29135a (Update)
-'''
-<<<<<<< HEAD
-=======
-"""
->>>>>>> 88b6013 (remove port changing)
-def communication_manager(switch_ports=False):
->>>>>>> d1e287e (Fix listing port issue)
     # find own ip
     init_ip()
     bcast_port = 5001
     tcp_port = 6001
-=======
-def communication_manager():
-    # find own ip
-    init_ip()
-<<<<<<< HEAD
-    bcast_port = 1337 #if switch_ports else 1338
-    tcp_listen = 9990 #if switch_ports else 9995
-    tcp_port = 9995 #if switch_ports else 9990
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-=======
-    bcast_port = 1337  # if switch_ports else 1338
-    tcp_listen = 9990  # if switch_ports else 9995
-    tcp_port = 9995  # if switch_ports else 9990
->>>>>>> 27bca0c (Autoformat save)
-=======
-    # find own ip
-    init_ip()
-<<<<<<< HEAD
-<<<<<<< HEAD
-    bcast_port = 1337 #if switch_ports else 1338
-    tcp_listen = 9990 #if switch_ports else 9995
-    tcp_port = 9990 #if switch_ports else 9990
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
-    bcast_port = 1337  # if switch_ports else 1338
-=======
-    bcast_port = 5000  # if switch_ports else 1338
->>>>>>> 0ed84c7 (Fix bcast_listener in shell_list() and capture bcast data)
-    tcp_listen = 9990  # if switch_ports else 9995
-    tcp_port = 9990  # if switch_ports else 9990
->>>>>>> 531b716 (Autoformat)
 
     # broadcast to other users that you exist
     #broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -1579,15 +724,7 @@ def communication_manager():
 #                                  name="receive_file_worker",)
 
     procs = [
-<<<<<<< HEAD
-<<<<<<< HEAD
         # broadcast_listener_worker,
-=======
-        #broadcast_listener_worker,
->>>>>>> 665c2e2 (Start bcast listener inside shell_list())
-=======
-        # broadcast_listener_worker,
->>>>>>> 531b716 (Autoformat)
         broadcast_sender_worker,
         tcp_listener_worker,
 #        receive_file_worker,
@@ -1597,26 +734,10 @@ def communication_manager():
         for p in procs:
             #print("Starting: {}".format(p.name))
             p.start()
-<<<<<<< HEAD
-<<<<<<< HEAD
 
         # while True:
             #tcp_client(tcp_port, input(), '172.17.0.4')
             # sleep(1)
-=======
-        '''
-        while True:
-            tcp_client(tcp_port, input())
-            sleep(1)
-        '''
->>>>>>> 608ebb8 (Get connection between clients working)
-=======
-        
-        #while True:
-            #tcp_client(tcp_port, input(), '172.17.0.4')
-            #sleep(1)
-        
->>>>>>> 8384aaf (uncomment SSL stuff, fix timer)
 
     except KeyboardInterrupt:
         for p in procs:
@@ -1626,10 +747,6 @@ def communication_manager():
                 sleep(0.1)
             if not p.is_alive():
                 print(p.join())
-<<<<<<< HEAD
-=======
-"""
->>>>>>> 88b6013 (remove port changing)
 
 # # # # #    9. MAIN    # # # # #
 
@@ -1643,11 +760,7 @@ def main():
     else:
         # Handle target environment that doesn't support HTTPS verification
         ssl._create_default_https_context = _create_unverified_https_context
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 430510c (clean up + general progress)
     # credentials.txt is the file that contains user credentials
     touch("credentials.txt")
     chmod("credentials.txt", 0o600)
@@ -1662,10 +775,6 @@ def main():
     # prompt log in
     if query_binary("Do you want to log in"):
         if logIn():
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             # Start two threads - comm_manager & secureDropShell
             # 1. Start comm_manager
             th_comm_manager = Thread(target=communication_manager, daemon=True)
@@ -1674,7 +783,6 @@ def main():
             th_comm_manager.join()
             # th_comm_manager.join()
 
-<<<<<<< HEAD
             '''
             if KeyboardInterrupt:
                 if th_comm_manager.is_alive():
@@ -1683,82 +791,8 @@ def main():
             # 2. Shell - Supports add, list, send, exit, help
             #th_secureDropShell = Thread(target=secureDropShell)
             # th_secureDropShell.start()
-=======
-=======
-            if len(sys.argv) > 1:
-                port, p = establishConnection()
-            else:
-                port, p = establishConnection(True)
-=======
-            port, p = establishConnection()
->>>>>>> 88b6013 (remove port changing)
-            secureDropShell()
-            killProcesses(p)
->>>>>>> d1e287e (Fix listing port issue)
-            # * Start two threads - receive_files & secureDropShell
-            '''
-            # 1. Receive files
-            th_receive_file = Thread(target=receive_file, daemon=True)
-            th_receive_file.start()
-=======
-            # Start two threads - comm_manager & secureDropShell
-            # 1. Start comm_manager
-            th_comm_manager = Thread(target=communication_manager, daemon=True)
-
-            th_comm_manager.start()
-<<<<<<< HEAD
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-
-            # 2. Shell - Supports add, list, send, exit, help
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 9c54801 (Add some comments with VSCode Extension BetterComments)
             th_secureDropShell = Thread(target=secureDropShell)
             th_secureDropShell.start()
-=======
- #           th_secureDropShell = Thread(target=secureDropShell)
- #           th_secureDropShell.start()
-=======
-         #           th_secureDropShell = Thread(target=secureDropShell)
-         #           th_secureDropShell.start()
->>>>>>> bd75a18 (Found out the problem. We need to store data captured in a seperate file (maybe a temp file))
-            secureDropShell()
->>>>>>> dd7f64f (work in progress: capture messages)
-=======
-            th_secureDropShell = Thread(target=secureDropShell)
-            th_secureDropShell.start()
-<<<<<<< HEAD
-            '''
-
-            # secureDropShell()
->>>>>>> 2247660 (Remove tqdm progress bar for sending.)
-=======
->>>>>>> de87437 (Fix broadcasting, rm switch_ports, multithreading in main)
-=======
-            th_comm_manager.join()
-            #th_comm_manager.join()
-            
-=======
->>>>>>> 531b716 (Autoformat)
-            '''
-            if KeyboardInterrupt:
-                if th_comm_manager.is_alive():
-                    th_comm_manager.terminate()
-            '''
-            # 2. Shell - Supports add, list, send, exit, help
-            #th_secureDropShell = Thread(target=secureDropShell)
-<<<<<<< HEAD
-            #th_secureDropShell.start()
->>>>>>> 80442f2 (Test threading)
-=======
-            # th_secureDropShell.start()
-<<<<<<< HEAD
->>>>>>> 27bca0c (Autoformat save)
-=======
-            th_secureDropShell = Thread(target=secureDropShell)
-            th_secureDropShell.start()
->>>>>>> 608ebb8 (Get connection between clients working)
 
 
 if __name__ == "__main__":
